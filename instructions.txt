@@ -1,0 +1,112 @@
+System Architecture:
+- Backend: Laravel (PHP Framework)
+- Frontend: React + Inertia.js
+- Database: MySQL
+
+Dependencies:
+Backend (Laravel):
+- laravel/breeze - Authentication scaffolding with Inertia
+- inertiajs/inertia-laravel - Server-side Inertia adapter
+- spatie/laravel-permission - Role and permission management
+- intervention/image - Image handling
+- maatwebsite/excel - Excel import/export
+- barryvdh/laravel-dompdf - PDF generation
+- pusher/pusher-php-server - Real-time notifications
+
+Frontend (React + Inertia):
+- @inertiajs/react - Client-side Inertia adapter
+- @mui/material - UI components
+- @headlessui/react - Accessible UI components
+- formik - Form handling
+- yup - Form validation
+- react-screen-reader - Accessibility
+- react-aria - Accessibility hooks
+- chart.js - Data visualization
+- i18next - Internationalization
+
+Core Modules:
+1. Special Needs Student Management
+   - Class organization and grouping based on needs
+   - Teacher assignments and specialization tracking
+   - Customized timetable management for different ability groups
+   - Special education teacher scheduling
+   - Classroom and resource allocation planning
+   - Session timing management with break considerations
+   - Support staff coordination and scheduling
+   - Substitute teacher management for special needs classes
+   - Teaching material and aid tracking per class
+   - Progress report scheduling and management
+   - Parent-teacher meeting coordination
+   - Therapy session scheduling and tracking
+   - Specialized training schedule for teachers
+   - Class size monitoring and adjustment
+   
+2. Attendance Management
+   - Standard attendance tracking
+   - Leave management
+   - Session tracking
+   - Staff attendance
+
+3. Project Management
+   - Task management
+   - Project tracking
+   - Resource allocation
+   - Progress monitoring
+   - Staff coordination
+
+4. Grants Management
+   - Grant applications
+   - Fund tracking
+   - Aid disbursement
+   - Donor management
+
+5. Document Record System
+   - Document storage
+   - Version control
+   - Access permissions
+   - Document categorization
+
+6. Accounts Management
+   - Expense tracking
+   - Budget management
+   - Financial reporting
+   - Transaction records
+
+7. Payroll Management
+   - Staff salary management
+   - Compensation tracking
+   - Benefits management
+   - Tax calculations
+
+Technical Requirements:
+1. Security:
+   - Role-based access control
+   - Data encryption
+   - Audit logging
+   - Secure file storage
+
+2. Development Standards:
+   - RESTful API architecture
+   - Database migrations and seeders
+   - Error handling
+   - Performance optimization
+   - Automated testing
+   - API documentation
+
+3. User Interface:
+   - Responsive design
+   - Multiple theme support
+   - Customizable interface
+
+4. Reporting:
+   - Multiple export options (PDF, Excel)
+   - Data visualization
+   - Automated report generation
+   - Custom report builder
+
+Database Considerations:
+- Separate schemas for different modules
+- Efficient indexing for performance
+- Regular backup scheduling
+- Data archiving strategy
+- Audit trails
