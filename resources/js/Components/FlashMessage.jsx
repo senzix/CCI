@@ -3,14 +3,17 @@ import { usePage } from '@inertiajs/react';
 import { FaCheckCircle, FaExclamationCircle, FaTimes } from 'react-icons/fa';
 
 export default function FlashMessage() {
-    const { flash = {} } = usePage().props;
-    const [visible, setVisible] = useState(true);
+    const { flash } = usePage().props;
+    const [visible, setVisible] = useState(false);
 
     useEffect(() => {
+        console.log('Flash message props:', flash);
         if (flash?.success || flash?.error) {
             setVisible(true);
+            console.log('Setting visible to true');
             const timer = setTimeout(() => {
                 setVisible(false);
+                console.log('Setting visible to false');
             }, 5000);
 
             return () => clearTimeout(timer);

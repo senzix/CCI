@@ -10,6 +10,9 @@ export default function SearchFilters({ filters = {}, categories = [] }) {
         search: filters?.search || '',
         category: filters?.category || 'all',
         type: filters?.type || 'all',
+        date_from: filters?.date_from || '',
+        date_to: filters?.date_to || '',
+        include_grants: filters?.include_grants || false
     });
 
     const fileTypes = [
@@ -37,7 +40,11 @@ export default function SearchFilters({ filters = {}, categories = [] }) {
                 route('documents.index'),
                 { 
                     ...values,
-                    category: values.category === 'all' ? null : values.category
+                    category: values.category === 'all' ? null : values.category,
+                    type: values.type === 'all' ? null : values.type,
+                    date_from: values.date_from || null,
+                    date_to: values.date_to || null,
+                    include_grants: filters.include_grants
                 },
                 { 
                     preserveState: true, 
@@ -48,7 +55,7 @@ export default function SearchFilters({ filters = {}, categories = [] }) {
         }, 300);
 
         return () => clearTimeout(debounceId);
-    }, [values]);
+    }, [values, filters.include_grants]);
 
     return (
         <div className="p-3 border-b border-gray-200">

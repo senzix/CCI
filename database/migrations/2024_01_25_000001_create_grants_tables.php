@@ -37,14 +37,14 @@ return new class extends Migration
             $table->softDeletes();
         });
 
-        Schema::create('grant_documents', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('grant_id')->constrained()->onDelete('cascade');
-            $table->string('title');
-            $table->string('file_path');
-            $table->string('type'); // proposal, report, contract, etc.
-            $table->timestamps();
-        });
+        // Schema::create('grant_documents', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->foreignId('grant_id')->constrained()->onDelete('cascade');
+        //     $table->string('title');
+        //     $table->string('file_path');
+        //     $table->string('type'); // proposal, report, contract, etc.
+        //     $table->timestamps();
+        // });
 
         Schema::create('grant_expenditures', function (Blueprint $table) {
             $table->id();

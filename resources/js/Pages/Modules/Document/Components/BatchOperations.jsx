@@ -53,6 +53,7 @@ export default function BatchOperations({
     const handleDeleteConfirm = () => {
         router.delete(route('documents.batch.destroy'), {
             data: { documents: selectedDocuments },
+            preserveScroll: true,
             onSuccess: () => {
                 setIsDeleteModalOpen(false);
                 onClearSelection();

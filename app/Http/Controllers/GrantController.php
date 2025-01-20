@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Storage;
 use App\Models\DocumentCategory;
+use App\Models\GrantExpenditure;
 
 class GrantController extends Controller
 {
@@ -183,6 +184,41 @@ class GrantController extends Controller
 
         return redirect()->back()
             ->with('success', 'Document removed successfully.');
+    }
+
+    public function updateExpenditure(Request $request, Grant $grant, GrantExpenditure $expenditure)
+    {
+        $validated = $request->validate([
+            'description' => 'required|string',
+            'amount' => 'required|numeric|min:0',
+            'date' => 'required|date',
+            'category' => 'required|string',
+            'receipt_number' => 'nullable|string',
+            'receipt_file' => 'nullable|file|max:5120', // 5MB max
+            'notes' => 'nullable|string',
+        ]);
+
+        // Calculate the difference in amount to update grant's total spent
+        $amountDifference = $validated['amount'] - $expenditure->amount;
+
+        if ($request->hasFile('receipt_file')) {
+            // Delete old receipt file if it exists
+            if ($expenditure->receipt_file) {
+                Storage::disk('public')->delete($expenditure->receipt_file);
+            }
+            $validated['receipt_file'] = $request->file('receipt_file')
+                ->store('grant-receipts', 'public');
+        }
+
+        $expenditure->update($validated);
+        
+        // Update grant's amount_spent
+        if ($amountDifference != 0) {
+            $grant->increment('amount_spent', $amountDifference);
+        }
+
+        return redirect()->back()
+            ->with('success', 'Expenditure updated successfully.');
     }
 
     // I'll continue with more controller methods in the next part...

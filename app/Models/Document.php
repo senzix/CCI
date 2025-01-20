@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
+use App\Models\Grant;
 
 class Document extends Model
 {
@@ -42,6 +43,8 @@ class Document extends Model
 
     protected $appends = ['formatted_size'];
 
+    protected $morphClass = 'document';
+
     public function category(): BelongsTo
     {
         return $this->belongsTo(DocumentCategory::class);
@@ -59,7 +62,7 @@ class Document extends Model
 
     public function documentable(): MorphTo
     {
-        return $this->morphTo();
+        return $this->morphTo(__FUNCTION__, 'documentable_type', 'documentable_id');
     }
 
     public function getFormattedSizeAttribute(): string
@@ -83,5 +86,22 @@ class Document extends Model
             'jpg', 'jpeg', 'png', 'gif' => 'image',
             default => 'file'
         };
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+        
+        static::creating(function ($document) {
+            if ($document->documentable_type === 'grant') {
+                $document->documentable_type = Grant::class;
+            }
+        });
+
+        static::saving(function ($document) {
+            if ($document->documentable_type === 'grant') {
+                $document->documentable_type = Grant::class;
+            }
+        });
     }
 } 

@@ -1,14 +1,21 @@
 import { useState } from 'react';
+import { Head, Link, router } from '@inertiajs/react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head } from '@inertiajs/react';
-import DocumentList from './Components/DocumentList';
+import { Switch } from '@headlessui/react';
+import { 
+    FaThLarge, 
+    FaTable, 
+    FaTrash, 
+    FaPlus, 
+    FaUpload 
+} from 'react-icons/fa';
 import DocumentUploadForm from './Components/DocumentUploadForm';
 import SearchFilters from './Components/SearchFilters';
-import { FaUpload, FaThLarge, FaTable, FaPlus } from 'react-icons/fa';
+import BatchOperations from './Components/BatchOperations';
+import DocumentList from './Components/DocumentList';
 import CategoryManagementModal from './Components/CategoryManagementModal';
 import VersionUploadForm from './Components/VersionUploadForm';
 import ShareDocumentForm from './Components/ShareDocumentForm';
-import BatchOperations from './Components/BatchOperations';
 
 export default function Index({ documents = { data: [] }, categories = [], filters = {} }) {
     const [isUploadFormOpen, setIsUploadFormOpen] = useState(false);
@@ -18,6 +25,7 @@ export default function Index({ documents = { data: [] }, categories = [], filte
     const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
     const [viewMode, setViewMode] = useState('grid');
     const [selectedDocuments, setSelectedDocuments] = useState([]);
+    const [includeGrantDocs, setIncludeGrantDocs] = useState(false);
 
     const handleVersionClick = (document) => {
         setSelectedDocument(document);
@@ -31,6 +39,28 @@ export default function Index({ documents = { data: [] }, categories = [], filte
 
     const handleClearSelection = () => {
         setSelectedDocuments([]);
+    };
+
+    const handleToggleGrantDocs = (checked) => {
+        setIncludeGrantDocs(checked);
+        
+        router.get(
+            route('documents.index'), 
+            {
+                ...filters,
+                include_grants: checked
+            }, 
+            {
+                preserveState: true,
+                preserveScroll: true,
+                onSuccess: () => {
+                    setIncludeGrantDocs(checked);
+                },
+                onError: () => {
+                    setIncludeGrantDocs(!checked);
+                }
+            }
+        );
     };
 
     return (
@@ -64,6 +94,13 @@ export default function Index({ documents = { data: [] }, categories = [], filte
                                 <FaTable className="h-4 w-4" />
                             </button>
                         </div>
+                        <Link
+                            href={route('documents.trash')}
+                            className="inline-flex items-center px-3 py-2 text-sm font-medium bg-gray-100 hover:bg-gray-200 text-gray-700 rounded border border-gray-300"
+                        >
+                            <FaTrash className="mr-2 h-4 w-4" />
+                            Trash
+                        </Link>
                         <button
                             onClick={() => setIsCategoryModalOpen(true)}
                             className="inline-flex items-center px-3 py-2 text-sm font-medium bg-gray-600 hover:bg-gray-700 text-white rounded"
@@ -97,6 +134,24 @@ export default function Index({ documents = { data: [] }, categories = [], filte
                             onClearSelection={handleClearSelection}
                             categories={categories}
                         />
+
+                        <div className="flex items-center space-x-2">
+                            <Switch
+                                checked={includeGrantDocs}
+                                onChange={handleToggleGrantDocs}
+                                className={`${
+                                    includeGrantDocs ? 'bg-blue-600' : 'bg-gray-200'
+                                } relative inline-flex h-6 w-11 items-center rounded-full`}
+                            >
+                                <span className="sr-only">Include Grant Documents</span>
+                                <span
+                                    className={`${
+                                        includeGrantDocs ? 'translate-x-6' : 'translate-x-1'
+                                    } inline-block h-4 w-4 transform rounded-full bg-white transition`}
+                                />
+                            </Switch>
+                            <span className="text-sm text-gray-600">Include Grant Documents</span>
+                        </div>
 
                         <DocumentList
                             documents={documents}

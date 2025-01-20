@@ -1,5 +1,4 @@
 import { 
-    FaFile, 
     FaFilePdf, 
     FaFileWord, 
     FaFileExcel, 
@@ -8,7 +7,6 @@ import {
     FaDownload,
     FaTrash,
     FaShare,
-    FaHistory,
     FaCheck
 } from 'react-icons/fa';
 import { formatDate } from '@/utils';

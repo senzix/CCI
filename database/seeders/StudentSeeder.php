@@ -16,11 +16,14 @@ class StudentSeeder extends Seeder
         $classes = StudentClass::all();
         $specialNeeds = ['Autism', 'ADHD', 'Dyslexia', 'Physical', null];
         $statuses = ['active', 'pending', 'archived'];
+        $currentYear = date('Y');
 
         foreach (range(1, 50) as $index) {
+            $registrationNumber = 'STU' . $currentYear . str_pad($index, 4, '0', STR_PAD_LEFT);
+            
             $student = Student::create([
                 'name' => $faker->name,
-                'registration_number' => 'STU' . str_pad($index, 4, '0', STR_PAD_LEFT),
+                'registration_number' => $registrationNumber,
                 'photo_path' => null,
                 'student_class_id' => $faker->randomElement($classes)->id,
                 'special_needs_category' => $faker->randomElement($specialNeeds),

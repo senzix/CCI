@@ -12,7 +12,7 @@ export default function GrantDocumentManager({ grant, documents = [], categories
 
     const filteredDocuments = selectedCategory === 'all'
         ? documents
-        : documents.filter(doc => doc.category === selectedCategory);
+        : documents.filter(doc => doc.category_id === selectedCategory);
 
     const handleDelete = async (documentId) => {
         if (confirm('Are you sure you want to delete this document?')) {

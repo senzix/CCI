@@ -6,10 +6,12 @@ import GrantForm from './Components/GrantForm';
 import StatsSection from './Components/StatsSection';
 import SearchFilters from './Components/SearchFilters';
 import { FaPlus } from 'react-icons/fa';
+import CategoryManager from './Components/CategoryManager';
 
 export default function Index({ grants, categories, filters, stats }) {
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [editingGrant, setEditingGrant] = useState(null);
+    const [isCategoryManagerOpen, setIsCategoryManagerOpen] = useState(false);
 
     return (
         <AuthenticatedLayout
@@ -23,13 +25,21 @@ export default function Index({ grants, categories, filters, stats }) {
                             Manage grant applications and funding
                         </p>
                     </div>
-                    <button
-                        onClick={() => setIsFormOpen(true)}
-                        className="inline-flex items-center px-2.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-sm text-white font-medium rounded-md"
-                    >
-                        <FaPlus className="w-3.5 h-3.5 mr-1.5" />
-                        New Grant
-                    </button>
+                    <div className="flex space-x-3">
+                        <button
+                            onClick={() => setIsCategoryManagerOpen(true)}
+                            className="inline-flex items-center px-2.5 py-1.5 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                        >
+                            Manage Categories
+                        </button>
+                        <button
+                            onClick={() => setIsFormOpen(true)}
+                            className="inline-flex items-center px-2.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-sm text-white font-medium rounded-md"
+                        >
+                            <FaPlus className="w-3.5 h-3.5 mr-1.5" />
+                            New Grant
+                        </button>
+                    </div>
                 </div>
             }
         >
@@ -63,6 +73,12 @@ export default function Index({ grants, categories, filters, stats }) {
                     setEditingGrant(null);
                 }}
                 grant={editingGrant}
+                categories={categories}
+            />
+
+            <CategoryManager
+                isOpen={isCategoryManagerOpen}
+                onClose={() => setIsCategoryManagerOpen(false)}
                 categories={categories}
             />
         </AuthenticatedLayout>

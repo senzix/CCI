@@ -8,14 +8,18 @@ import TextArea from '@/Components/TextArea';
 import { FaCloudUploadAlt } from 'react-icons/fa';
 
 export default function DocumentUploadForm({ 
-    isOpen = false, 
-    onClose = () => {}, 
-    categories = [],
-    documentableType = null,
-    documentableId = null,
-    defaultCategory = null
+    isOpen, 
+    onClose, 
+    documentableType, 
+    documentableId,
+    categories,
+    defaultCategory 
 }) {
-    console.log('DocumentUploadForm Props:', { documentableType, documentableId });
+    console.log('DocumentUploadForm Props:', {
+        documentableType,
+        documentableId,
+        defaultCategory
+    });
 
     const [dragActive, setDragActive] = useState(false);
 
@@ -24,14 +28,13 @@ export default function DocumentUploadForm({
         file: null,
         category_id: defaultCategory || '',
         description: '',
-        tags: [],
-        documentable_type: null,
-        documentable_id: null,
+        tags: '[]',
+        documentable_type: documentableType,
+        documentable_id: documentableId
     });
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        
         console.log('Submitting form with data:', data);
         
         const formData = new FormData();
