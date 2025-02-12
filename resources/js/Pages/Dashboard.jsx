@@ -37,7 +37,7 @@ export default function Dashboard(props) {
 
     const modules = [
         {
-            title: 'Student Management',
+            title: 'Beneficiary Management',
             description: 'Manage students, classes, and resources',
             icon: FaUsers,
             color: 'border-blue-500',
