@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, router } from '@inertiajs/react';
-import { FaFileUpload, FaDownload, FaTrash, FaEye, FaFilePdf, FaFileWord, FaFileExcel, FaFileImage } from 'react-icons/fa';
+import { FaFileUpload, FaDownload, FaTrash, FaEye, FaFile, FaFilePdf, FaFileWord, FaFileExcel, FaFileImage } from 'react-icons/fa';
 import DocumentUploadForm from '@/Pages/Modules/Document/Components/DocumentUploadForm';
 import { formatDate, formatFileSize } from '@/utils';
 
