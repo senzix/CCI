@@ -3,9 +3,12 @@
     "type": "module",
     "scripts": {
         "build": "vite build",
-        "dev": "vite"
+        "dev": "vite",
+        "lint": "eslint resources/js --ext .js,.jsx",
+        "lint:fix": "eslint resources/js --ext .js,.jsx --fix"
     },
     "devDependencies": {
+        "@babel/eslint-parser": "^7.26.8",
         "@headlessui/react": "^2.2.0",
         "@inertiajs/react": "^2.0.0",
         "@tailwindcss/forms": "^0.5.3",
@@ -13,6 +16,9 @@
         "autoprefixer": "^10.4.12",
         "axios": "^1.7.4",
         "concurrently": "^9.0.1",
+        "eslint": "^8.56.0",
+        "eslint-plugin-react": "^7.37.4",
+        "eslint-plugin-react-hooks": "^5.1.0",
         "laravel-vite-plugin": "^1.0",
         "postcss": "^8.4.31",
         "react": "^18.2.0",
