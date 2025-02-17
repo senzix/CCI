@@ -19,3 +19,8 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+node_modules
+public
+vendor
+storage
+bootstrap/cache
