@@ -92,7 +92,7 @@ export default function DocumentList({
                                     onClick={() => toggleSelection(document.id)}
                                     className={`w-5 h-5 rounded ${
                                         selectedDocuments.includes(document.id)
-                                            ? 'bg-blue-500'
+                                            ? 'bg-primary-500'
                                             : 'bg-white border border-gray-300'
                                     } flex items-center justify-center`}
                                 >
@@ -120,7 +120,7 @@ export default function DocumentList({
                                 <div className="flex space-x-2">
                                     <button
                                         onClick={(e) => handleDownload(e, document.id)}
-                                        className="p-1 text-gray-500 hover:text-gray-700"
+                                        className="inline-flex items-center px-3 py-2 text-sm leading-4 font-medium rounded-md text-white bg-primary-500 hover:bg-primary-600"
                                     >
                                         <FaDownload className="h-4 w-4" />
                                     </button>
@@ -132,7 +132,7 @@ export default function DocumentList({
                                     </button>
                                     <button
                                         onClick={() => handleDeleteClick(document)}
-                                        className="p-1 text-gray-500 hover:text-red-700"
+                                        className="text-secondary-500 hover:text-secondary-700"
                                     >
                                         <FaTrash className="h-4 w-4" />
                                     </button>
@@ -195,7 +195,7 @@ export default function DocumentList({
                                     onClick={() => toggleSelection(document.id)}
                                     className={`w-5 h-5 rounded ${
                                         selectedDocuments.includes(document.id)
-                                            ? 'bg-blue-500'
+                                            ? 'bg-primary-500'
                                             : 'bg-white border border-gray-300'
                                     } flex items-center justify-center`}
                                 >
@@ -232,7 +232,7 @@ export default function DocumentList({
                                 <div className="flex justify-end space-x-3">
                                     <button
                                         onClick={(e) => handleDownload(e, document.id)}
-                                        className="text-blue-600 hover:text-blue-900"
+                                        className="inline-flex items-center px-3 py-2 text-sm leading-4 font-medium rounded-md text-white bg-primary-500 hover:bg-primary-600"
                                     >
                                         Download
                                     </button>
@@ -244,7 +244,7 @@ export default function DocumentList({
                                     </button>
                                     <button
                                         onClick={() => handleDeleteClick(document)}
-                                        className="text-gray-600 hover:text-red-700"
+                                        className="text-secondary-500 hover:text-secondary-700"
                                     >
                                         Delete
                                     </button>

@@ -12,20 +12,20 @@ import DeleteConfirmationModal from '@/Components/DeleteConfirmationModal';
 export default function BatchOperations({ 
     selectedDocuments, 
     onClearSelection,
-    categories 
+    categories,
+    can = {}
 }) {
     const [isMoving, setIsMoving] = useState(false);
     const [targetCategory, setTargetCategory] = useState('');
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
     const handleDownload = () => {
-        // Create a form and submit it directly
         const form = document.createElement('form');
         form.method = 'POST';
         form.action = route('documents.batch.download');
 
         // Add CSRF token
-        const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         const csrfInput = document.createElement('input');
         csrfInput.type = 'hidden';
         csrfInput.name = '_token';
@@ -41,9 +41,10 @@ export default function BatchOperations({
             form.appendChild(input);
         });
 
+        // Add to body, submit, and remove
         document.body.appendChild(form);
         form.submit();
-        document.body.removeChild(form);
+        setTimeout(() => document.body.removeChild(form), 100);
     };
 
     const handleDeleteClick = () => {
@@ -96,60 +97,64 @@ export default function BatchOperations({
                                 </button>
                             </div>
                             <div className="flex space-x-3">
-                                {isMoving ? (
-                                    <>
-                                        <select
-                                            value={targetCategory}
-                                            onChange={(e) => setTargetCategory(e.target.value)}
-                                            className="rounded-md border-gray-300 text-sm"
-                                        >
-                                            <option value="">Select category</option>
-                                            {categories.map(category => (
-                                                <option key={category.id} value={category.id}>
-                                                    {category.name}
-                                                </option>
-                                            ))}
-                                        </select>
-                                        <button
-                                            onClick={handleMove}
-                                            disabled={!targetCategory}
-                                            className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-green-600 hover:bg-green-700 disabled:opacity-50"
-                                        >
-                                            <FaCheck className="mr-2 h-4 w-4" />
-                                            Confirm Move
-                                        </button>
-                                        <button
-                                            onClick={() => setIsMoving(false)}
-                                            className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-700 bg-gray-100 hover:bg-gray-200"
-                                        >
-                                            <FaTimes className="mr-2 h-4 w-4" />
-                                            Cancel
-                                        </button>
-                                    </>
-                                ) : (
-                                    <>
-                                        <button
-                                            onClick={handleDownload}
-                                            className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
-                                        >
-                                            <FaDownload className="mr-2 h-4 w-4" />
-                                            Download
-                                        </button>
-                                        <button
+                                {can.download_documents && (
+                                    <button 
+                                        onClick={handleDownload}
+                                        className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-primary-500 hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+                                    >
+                                        <FaDownload className="mr-2" /> Download
+                                    </button>
+                                )}
+                                
+                                {can.move_documents && (
+                                    isMoving ? (
+                                        <div className="flex items-center space-x-2">
+                                            <select
+                                                value={targetCategory}
+                                                onChange={(e) => setTargetCategory(e.target.value)}
+                                                className="rounded-md border-gray-300 shadow-sm focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50"
+                                            >
+                                                <option value="">Select Category</option>
+                                                {categories.map((category) => (
+                                                    <option key={category.id} value={category.id}>
+                                                        {category.name}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                            <button
+                                                onClick={handleMove}
+                                                disabled={!targetCategory}
+                                                className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-primary-500 hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+                                            >
+                                                <FaCheck className="mr-2" /> Move
+                                            </button>
+                                            <button
+                                                onClick={() => {
+                                                    setIsMoving(false);
+                                                    setTargetCategory('');
+                                                }}
+                                                className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                                            >
+                                                <FaTimes className="mr-2" /> Cancel
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <button 
                                             onClick={() => setIsMoving(true)}
-                                            className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-green-600 hover:bg-green-700"
+                                            className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-primary-500 hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
                                         >
-                                            <FaFolderOpen className="mr-2 h-4 w-4" />
-                                            Move
+                                            <FaFolderOpen className="mr-2" /> Move
                                         </button>
-                                        <button
-                                            onClick={handleDeleteClick}
-                                            className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700"
-                                        >
-                                            <FaTrash className="mr-2 h-4 w-4" />
-                                            Delete
-                                        </button>
-                                    </>
+                                    )
+                                )}
+                                
+                                {can.delete_documents && (
+                                    <button 
+                                        onClick={handleDeleteClick}
+                                        className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-secondary-500 hover:bg-secondary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary-500"
+                                    >
+                                        <FaTrash className="mr-2" /> Delete
+                                    </button>
                                 )}
                             </div>
                         </div>

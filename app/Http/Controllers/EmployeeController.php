@@ -6,6 +6,8 @@ use App\Models\Employee;
 use App\Models\Department;
 use App\Models\Position;
 use App\Models\User;
+use App\Models\Role;
+use App\Models\Permission;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
@@ -14,7 +16,7 @@ class EmployeeController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Employee::with(['position', 'position.department'])
+        $query = Employee::with(['position', 'position.department', 'user', 'user.permissions'])
             ->when($request->search, function ($query, $search) {
                 $query->where(function ($query) use ($search) {
                     $query->where('first_name', 'like', "%{$search}%")
@@ -34,9 +36,10 @@ class EmployeeController extends Controller
 
         return Inertia::render('Modules/Employee/Index', [
             'employees' => $query->paginate(10)->withQueryString(),
-            'departments' => Department::all(),
+            'departments' => Department::with('positions')->get(),
             'positions' => Position::with('department')->get(),
-            'filters' => $request->only(['search', 'department', 'status'])
+            'filters' => $request->only(['search', 'department', 'status']),
+            'permissions' => Permission::all(),
         ]);
     }
 
@@ -55,14 +58,22 @@ class EmployeeController extends Controller
             'address' => 'required|string',
             'emergency_contact_name' => 'required|string|max:255',
             'emergency_contact_phone' => 'required|string|max:20',
+            'password' => 'nullable|min:6',
         ]);
 
         // Create user account
         $user = User::create([
             'name' => $validated['first_name'] . ' ' . $validated['last_name'],
             'email' => $validated['email'],
-            'password' => Hash::make('password'), // Default password
+            'password' => Hash::make($validated['password'] ?? 'password123'),
+            'position_id' => $validated['position_id'],
+            'status' => 'active'
         ]);
+
+        // Sync permissions
+        if ($request->has('permissions')) {
+            $user->permissions()->sync($request->permissions);
+        }
 
         // Generate employee ID
         $employeeCount = Employee::count() + 1;
@@ -99,15 +110,29 @@ class EmployeeController extends Controller
             'address' => 'required|string',
             'emergency_contact_name' => 'required|string|max:255',
             'emergency_contact_phone' => 'required|string|max:20',
+            'password' => 'nullable|min:6',
+            'permissions' => 'array'
         ]);
 
         $employee->update($validated);
 
         // Update associated user
-        $employee->user->update([
+        $updateData = [
             'name' => $validated['first_name'] . ' ' . $validated['last_name'],
             'email' => $validated['email'],
-        ]);
+            'position_id' => $validated['position_id'],
+        ];
+
+        if (!empty($validated['password'])) {
+            $updateData['password'] = Hash::make($validated['password']);
+        }
+
+        $employee->user->update($updateData);
+
+        // Sync permissions
+        if ($request->has('permissions')) {
+            $employee->user->permissions()->sync($request->permissions);
+        }
 
         return redirect()->back()->with('success', 'Employee updated successfully.');
     }
@@ -124,16 +149,22 @@ class EmployeeController extends Controller
     {
         return Inertia::render('Modules/Employee/Create', [
             'departments' => Department::with('positions')->get(),
-            'positions' => Position::with('department')->get()
+            'positions' => Position::with('department')->get(),
+            'permissions' => Permission::all()
         ]);
     }
 
     public function edit(Employee $employee)
     {
-        return Inertia::render('Modules/Employee/Edit', [
-            'employee' => $employee->load(['position', 'position.department', 'user']),
-            'departments' => Department::with('positions')->get(),
-            'positions' => Position::with('department')->get()
+        $employee->load(['position.department', 'user.permissions']);
+        
+        return response()->json([
+            'employee' => array_merge($employee->toArray(), [
+                'permissions' => $employee->user->permissions->pluck('id')->toArray()
+            ]),
+            'departments' => Department::all(),
+            'positions' => Position::all(),
+            'permissions' => Permission::all()
         ]);
     }
 

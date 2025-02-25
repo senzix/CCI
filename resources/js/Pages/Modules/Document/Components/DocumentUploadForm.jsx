@@ -128,7 +128,7 @@ export default function DocumentUploadForm({
 
                                         <div
                                             className={`relative border-2 border-dashed rounded-lg p-6 ${
-                                                dragActive ? 'border-blue-500 bg-blue-50' : 'border-gray-300'
+                                                dragActive ? 'border-primary-500 bg-primary-50' : 'border-gray-300'
                                             }`}
                                             onDragEnter={handleDrag}
                                             onDragLeave={handleDrag}
@@ -146,7 +146,7 @@ export default function DocumentUploadForm({
                                                     Drag and drop your file here, or click to select
                                                 </p>
                                                 {data.file && (
-                                                    <p className="mt-2 text-sm text-blue-600 font-medium">
+                                                    <p className="mt-2 text-sm text-primary-500 font-medium">
                                                         {data.file.name}
                                                     </p>
                                                 )}
@@ -156,10 +156,10 @@ export default function DocumentUploadForm({
 
                                         {progress && (
                                             <div className="relative pt-1">
-                                                <div className="overflow-hidden h-2 text-xs flex rounded bg-blue-200">
+                                                <div className="overflow-hidden h-2 text-xs flex rounded bg-primary-200">
                                                     <div
                                                         style={{ width: `${progress}%` }}
-                                                        className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500"
+                                                        className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-primary-500"
                                                     />
                                                 </div>
                                             </div>
@@ -236,7 +236,7 @@ export default function DocumentUploadForm({
                                             <button
                                                 type="submit"
                                                 disabled={processing || !data.file}
-                                                className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md disabled:opacity-50"
+                                                className="px-4 py-2 text-sm font-medium text-white bg-primary-500 hover:bg-primary-600 rounded-md disabled:opacity-50"
                                             >
                                                 Upload
                                             </button>

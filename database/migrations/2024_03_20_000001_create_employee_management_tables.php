@@ -21,7 +21,9 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('code')->unique();
-            $table->foreignId('department_id')->constrained();
+            $table->foreignId('department_id')
+                ->constrained()
+                ->onDelete('cascade');
             $table->decimal('base_salary', 10, 2);
             $table->text('description')->nullable();
             $table->timestamps();

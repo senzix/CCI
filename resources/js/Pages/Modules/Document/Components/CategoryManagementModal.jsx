@@ -136,7 +136,7 @@ export default function CategoryManagementModal({ isOpen, onClose, categories = 
                                             <button
                                                 type="submit"
                                                 disabled={processing}
-                                                className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md disabled:opacity-50"
+                                                className="px-4 py-2 text-sm font-medium text-white bg-primary-500 hover:bg-primary-600 rounded-md disabled:opacity-50"
                                             >
                                                 {editingCategory ? 'Update' : 'Create'}
                                             </button>
@@ -163,7 +163,7 @@ export default function CategoryManagementModal({ isOpen, onClose, categories = 
                                                         </button>
                                                         <button
                                                             onClick={() => handleDeleteClick(category)}
-                                                            className="p-1 text-red-500 hover:text-red-700"
+                                                            className="p-1 text-secondary-500 hover:text-secondary-700"
                                                         >
                                                             <FaTrash className="h-4 w-4" />
                                                         </button>

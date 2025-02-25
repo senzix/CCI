@@ -6,12 +6,14 @@ use App\Models\Student;
 use App\Models\Grant;
 use App\Models\Document;
 use App\Models\PayrollRecord;
+use App\Models\AttendanceRecord;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         // Get the counts first
         $activeStudents = Student::where('status', 'active')->count();
@@ -46,6 +48,16 @@ class DashboardController extends Controller
                 'total_grant_amount' => $totalGrantAmount,
                 'total_files' => $totalDocuments,
                 'pending_payments' => PayrollRecord::where('payment_status', 'pending')->count(),
+                'attendance_rate' => AttendanceRecord::getMonthlyRate() ?? 0,
+            ],
+            'auth' => [
+                'user' => array_merge(
+                    $request->user()->only(['id', 'name', 'email']),
+                    [
+                        'permissions' => $request->user()->permissions->pluck('code'),
+                        'is_admin' => $request->user()->isAdmin(),
+                    ]
+                )
             ]
         ];
 

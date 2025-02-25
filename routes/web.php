@@ -22,6 +22,7 @@ use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\LeaveRequestController;
 use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\PayrollPeriodController;
+use App\Http\Controllers\ProjectController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -33,53 +34,63 @@ Route::get('/', function () {
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    // Dashboard - no permission needed since access is controlled in the component
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Student Management Routes
-    Route::get('/students/generate-registration', [StudentController::class, 'generateRegistrationNumber'])
-        ->name('students.generate-registration');
-    Route::resource('students', StudentController::class);
-    Route::resource('classes', StudentClassController::class);
-    Route::resource('class-assignments', ClassAssignmentController::class);
+    Route::prefix('students')->name('students.')->middleware('permission:students.view')->group(function () {
+        Route::get('/', [StudentController::class, 'index'])->name('index');
+        Route::get('/{student}', [StudentController::class, 'show'])->name('show');
+        Route::post('/', [StudentController::class, 'store'])->middleware('permission:students.create')->name('store');
+        Route::put('/{student}', [StudentController::class, 'update'])->middleware('permission:students.edit')->name('update');
+        Route::delete('/{student}', [StudentController::class, 'destroy'])->middleware('permission:students.delete')->name('destroy');
+        Route::get('/generate-registration', [StudentController::class, 'generateRegistrationNumber'])->name('generate-registration');
+    });
+
+    // Class Management
+    Route::prefix('classes')->name('classes.')->middleware('permission:classes.view')->group(function () {
+        Route::get('/', [StudentClassController::class, 'index'])->name('index');
+        Route::post('/', [StudentClassController::class, 'store'])->middleware('permission:classes.create')->name('store');
+        Route::put('/{class}', [StudentClassController::class, 'update'])->middleware('permission:classes.edit')->name('update');
+        Route::delete('/{class}', [StudentClassController::class, 'destroy'])->middleware('permission:classes.delete')->name('destroy');
+    });
 
     // Employee Management Routes
-    Route::prefix('employees')->name('employees.')->group(function () {
+    Route::prefix('employees')->name('employees.')->middleware('permission:employees.view')->group(function () {
         Route::get('/', [EmployeeController::class, 'index'])->name('index');
-        Route::get('/create', [EmployeeController::class, 'create'])->name('create');
-        Route::post('/', [EmployeeController::class, 'store'])->name('store');
         Route::get('/{employee}', [EmployeeController::class, 'show'])->name('show');
-        Route::get('/{employee}/edit', [EmployeeController::class, 'edit'])->name('edit');
-        Route::put('/{employee}', [EmployeeController::class, 'update'])->name('update');
-        Route::delete('/{employee}', [EmployeeController::class, 'destroy'])->name('destroy');
+        Route::post('/', [EmployeeController::class, 'store'])->middleware('permission:employees.create')->name('store');
+        Route::put('/{employee}', [EmployeeController::class, 'update'])->middleware('permission:employees.edit')->name('update');
+        Route::delete('/{employee}', [EmployeeController::class, 'destroy'])->middleware('permission:employees.delete')->name('destroy');
+        Route::get('/create', [EmployeeController::class, 'create'])->middleware('permission:employees.create')->name('create');
+        Route::get('/{employee}/edit', [EmployeeController::class, 'edit'])->middleware('permission:employees.edit')->name('edit');
         Route::put('/{employee}/status', [EmployeeController::class, 'updateStatus'])->name('update-status');
         Route::post('/{employee}/reset-password', [EmployeeController::class, 'resetPassword'])->name('reset-password');
     });
 
-    // Department Routes
-    Route::prefix('departments')->name('departments.')->group(function () {
+    // Department & Position Management
+    Route::prefix('departments')->name('departments.')->middleware('permission:departments.view')->group(function () {
         Route::get('/', [DepartmentController::class, 'index'])->name('index');
-        Route::post('/', [DepartmentController::class, 'store'])->name('store');
-        Route::put('/{department}', [DepartmentController::class, 'update'])->name('update');
-        Route::delete('/{department}', [DepartmentController::class, 'destroy'])->name('destroy');
+        Route::post('/', [DepartmentController::class, 'store'])->middleware('permission:departments.create')->name('store');
+        Route::put('/{department}', [DepartmentController::class, 'update'])->middleware('permission:departments.edit')->name('update');
+        Route::delete('/{department}', [DepartmentController::class, 'destroy'])->middleware('permission:departments.delete')->name('destroy');
     });
-
-    // Position Routes
-    Route::prefix('positions')->name('positions.')->group(function () {
+    Route::prefix('positions')->name('positions.')->middleware('permission:positions.view')->group(function () {
         Route::get('/', [PositionController::class, 'index'])->name('index');
-        Route::post('/', [PositionController::class, 'store'])->name('store');
-        Route::put('/{position}', [PositionController::class, 'update'])->name('update');
-        Route::delete('/{position}', [PositionController::class, 'destroy'])->name('destroy');
+        Route::post('/', [PositionController::class, 'store'])->middleware('permission:positions.create')->name('store');
+        Route::put('/{position}', [PositionController::class, 'update'])->middleware('permission:positions.edit')->name('update');
+        Route::delete('/{position}', [PositionController::class, 'destroy'])->middleware('permission:positions.delete')->name('destroy');
     });
 
-    // Attendance Routes
-    Route::prefix('attendance')->name('attendance.')->group(function () {
+    // Attendance Management
+    Route::prefix('attendance')->name('attendance.')->middleware('permission:attendance.view')->group(function () {
         Route::get('/', [AttendanceController::class, 'index'])->name('index');
-        Route::post('/', [AttendanceController::class, 'store'])->name('store');
-        Route::put('/{attendance}', [AttendanceController::class, 'update'])->name('update');
-        Route::delete('/{attendance}', [AttendanceController::class, 'destroy'])->name('destroy');
+        Route::post('/', [AttendanceController::class, 'store'])->middleware('permission:attendance.record')->name('store');
+        Route::put('/{attendance}', [AttendanceController::class, 'update'])->middleware('permission:attendance.record')->name('update');
+        Route::delete('/{attendance}', [AttendanceController::class, 'destroy'])->middleware('permission:attendance.record')->name('destroy');
     });
 
-    // Leave Request Routes
+    // Leave Request Management
     Route::prefix('leave-requests')->name('leave-requests.')->group(function () {
         Route::get('/', [LeaveRequestController::class, 'index'])->name('index');
         Route::post('/', [LeaveRequestController::class, 'store'])->name('store');
@@ -89,85 +100,83 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('/{leaveRequest}', [LeaveRequestController::class, 'destroy'])->name('destroy');
     });
 
-    // Payroll Routes
-    Route::prefix('payroll')->name('payroll.')->group(function () {
-        Route::get('/', [PayrollController::class, 'index'])->name('index');
-        Route::post('/generate', [PayrollController::class, 'generate'])->name('generate');
-        Route::get('/{payroll}', [PayrollController::class, 'show'])->name('show');
-        Route::put('/{payroll}', [PayrollController::class, 'update'])->name('update');
-        Route::delete('/{payroll}', [PayrollController::class, 'destroy'])->name('destroy');
-        Route::get('/{payroll}/download', [PayrollController::class, 'download'])->name('download');
-        Route::put('/{payroll}/mark-paid', [PayrollController::class, 'markPaid'])->name('mark-paid');
+    // Document Management
+    Route::prefix('documents')->name('documents.')->middleware('auth')->group(function () {
+        Route::get('/', [DocumentController::class, 'index'])
+            ->middleware('permission:documents.view')
+            ->name('index');
+        
+        Route::post('/upload', [DocumentController::class, 'store'])
+            ->middleware('permission:documents.upload')
+            ->name('store');
+        
+        Route::delete('/{document}', [DocumentController::class, 'destroy'])
+            ->middleware('permission:documents.delete')
+            ->name('destroy');
+        
+        Route::post('/{document}/share', [DocumentController::class, 'share'])
+            ->middleware('permission:documents.share')
+            ->name('share');
+        
+        Route::get('/download/{document}', [DocumentController::class, 'download'])
+            ->middleware('permission:documents.download')
+            ->name('download');
+            
+        Route::get('/trash', [DocumentController::class, 'trash'])
+            ->middleware('permission:documents.view')
+            ->name('trash');
+        
+        Route::post('/trash/{document}/restore', [DocumentController::class, 'restore'])
+            ->middleware('permission:documents.delete')
+            ->name('restore');
+        
+        Route::delete('/trash/{document}', [DocumentController::class, 'forceDelete'])
+            ->middleware('permission:documents.delete')
+            ->name('force-delete');
+
+        // Batch operation routes
+        Route::post('/batch/download', [BatchDocumentController::class, 'download'])
+            ->middleware('permission:documents.download')
+            ->name('batch.download');
+        
+        Route::post('/batch/move', [BatchDocumentController::class, 'move'])
+            ->middleware('permission:documents.move')
+            ->name('batch.move');
+        
+        Route::delete('/batch/destroy', [BatchDocumentController::class, 'destroy'])
+            ->middleware('permission:documents.delete')
+            ->name('batch.destroy');
     });
 
-    // Payroll Period Routes
-    Route::prefix('payroll-periods')->name('payroll-periods.')->group(function () {
-        Route::get('/', [PayrollPeriodController::class, 'index'])->name('index');
-        Route::post('/', [PayrollPeriodController::class, 'store'])->name('store');
-        Route::put('/{period}', [PayrollPeriodController::class, 'update'])->name('update');
-        Route::delete('/{period}', [PayrollPeriodController::class, 'destroy'])->name('destroy');
+    // Grant Management
+    Route::prefix('grants')->name('grants.')->middleware('permission:grants.view')->group(function () {
+        Route::get('/', [GrantController::class, 'index'])->name('index');
+        Route::post('/', [GrantController::class, 'store'])->middleware('permission:grants.create')->name('store');
+        Route::get('/{grant}', [GrantController::class, 'show'])->name('show');
+        Route::put('/{grant}', [GrantController::class, 'update'])->middleware('permission:grants.edit')->name('update');
+        Route::delete('/{grant}', [GrantController::class, 'destroy'])->middleware('permission:grants.delete')->name('destroy');
+        Route::get('/{grant}/expenditures', [GrantController::class, 'expenditures'])->name('expenditures');
+        Route::post('/{grant}/expenditures', [GrantController::class, 'addExpenditure'])->name('expenditures.store');
+        Route::put('/{grant}/expenditures/{expenditure}', [GrantController::class, 'updateExpenditure'])->name('expenditures.update');
     });
-
-    // Project Routes
-    Route::get('/project', function () {
-        return Inertia::render('Modules/Project/Index');
-    })->name('project.index');
-
-    // Account Routes
-    Route::get('/account', function () {
-        return Inertia::render('Modules/Account/Index');
-    })->name('account.index');
-
-    // Document Management Routes
-    Route::prefix('documents')->name('documents.')->group(function () {
-        // Document Trash Routes
-        Route::get('/trash', [DocumentController::class, 'trash'])->name('trash');
-        Route::post('/{document}/restore', [DocumentController::class, 'restore'])->name('restore');
-        Route::delete('/{document}/force', [DocumentController::class, 'forceDelete'])->name('force-delete');
-        
-        // Batch Operations
-        Route::post('/batch/download', [BatchDocumentController::class, 'download'])->name('batch.download');
-        Route::delete('/batch', [BatchDocumentController::class, 'destroy'])->name('batch.destroy');
-        Route::post('/batch/move', [BatchDocumentController::class, 'move'])->name('batch.move');
-        
-        // Regular document routes
-        Route::get('/', [DocumentController::class, 'index'])->name('index');
-        Route::post('/', [DocumentController::class, 'store'])->name('store');
-        Route::get('/{document}', [DocumentController::class, 'show'])->name('show');
-        Route::delete('/{document}', [DocumentController::class, 'destroy'])->name('destroy');
-        Route::get('/{document}/download', [DocumentController::class, 'download'])->name('download');
-        
-        // Document Versions
-        Route::post('/{document}/versions', [DocumentVersionController::class, 'store'])->name('versions.store');
-        Route::get('/{document}/versions/{version}', [DocumentVersionController::class, 'show'])->name('versions.show');
-        Route::delete('/{document}/versions/{version}', [DocumentVersionController::class, 'destroy'])->name('versions.destroy');
-        
-        // Document Sharing
-        Route::post('/{document}/share', [DocumentShareController::class, 'store'])->name('share.store');
-        Route::delete('/{document}/share/{share}', [DocumentShareController::class, 'destroy'])->name('share.destroy');
-        Route::get('/share/users', [DocumentShareController::class, 'users'])->name('share.users');
-
-        // Document Categories
-        Route::prefix('categories')->name('categories.')->group(function () {
-            Route::get('/', [DocumentCategoryController::class, 'index'])->name('index');
-            Route::post('/', [DocumentCategoryController::class, 'store'])->name('store');
-            Route::put('/{category}', [DocumentCategoryController::class, 'update'])->name('update');
-            Route::delete('/{category}', [DocumentCategoryController::class, 'destroy'])->name('destroy');
-        });
-    });
-
-    // Grant Management Routes
-    Route::resource('grants', GrantController::class);
-    Route::get('grants/{grant}/expenditures', [GrantController::class, 'expenditures'])->name('grants.expenditures');
-    Route::post('grants/{grant}/expenditures', [GrantController::class, 'addExpenditure'])
-        ->name('grants.expenditures.store');   
-    Route::put('grants/{grant}/expenditures/{expenditure}', [GrantController::class, 'updateExpenditure'])
-    ->name('grants.expenditures.update');
 
     // Grant Categories
-    Route::resource('grant-categories', GrantCategoryController::class)->except(['index', 'create', 'edit', 'show']);
+    Route::resource('grant-categories', GrantCategoryController::class)->except(['show']);
+
+    // Payroll Management
+    Route::prefix('payroll')->name('payroll.')->middleware('permission:payroll.view')->group(function () {
+        Route::get('/', [PayrollController::class, 'index'])->name('index');
+        Route::post('/generate', [PayrollController::class, 'generate'])->middleware('permission:payroll.generate')->name('generate');
+        Route::put('/{payroll}', [PayrollController::class, 'update'])->middleware('permission:payroll.edit')->name('update');
+        Route::delete('/{payroll}', [PayrollController::class, 'destroy'])->middleware('permission:payroll.edit')->name('destroy');
+        Route::put('/{payroll}/mark-paid', [PayrollController::class, 'markPaid'])->name('mark-paid');
+        Route::get('/{payroll}/download', [PayrollController::class, 'download'])->name('download');
+    });
+
+    Route::resource('payroll-periods', PayrollPeriodController::class)->except(['show']);
 });
 
+// Profile routes (no special permissions needed)
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -188,6 +197,21 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/payroll/{payroll}/download', [PayrollController::class, 'download'])->name('payroll.download');
     
     Route::resource('payroll-periods', PayrollPeriodController::class)->except(['show']);
+
+    // Add these new routes
+    Route::post('/positions', [PositionController::class, 'store'])->name('positions.store');
+    Route::delete('/positions/{position}', [PositionController::class, 'destroy'])->name('positions.destroy');
+});
+
+// Project Management
+Route::prefix('projects')->name('projects.')->middleware('permission:projects.view')->group(function () {
+    Route::get('/', [ProjectController::class, 'index'])->name('index');
+    Route::get('/create', [ProjectController::class, 'create'])->middleware('permission:projects.create')->name('create');
+    Route::post('/', [ProjectController::class, 'store'])->middleware('permission:projects.create')->name('store');
+    Route::get('/{project}', [ProjectController::class, 'show'])->name('show');
+    Route::get('/{project}/edit', [ProjectController::class, 'edit'])->middleware('permission:projects.edit')->name('edit');
+    Route::put('/{project}', [ProjectController::class, 'update'])->middleware('permission:projects.edit')->name('update');
+    Route::delete('/{project}', [ProjectController::class, 'destroy'])->middleware('permission:projects.delete')->name('destroy');
 });
 
 require __DIR__.'/auth.php';

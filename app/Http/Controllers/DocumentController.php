@@ -40,18 +40,23 @@ class DocumentController extends Controller
             });
         }
 
-        return inertia('Modules/Document/Index', [
-            'documents' => $query->latest()->paginate(20)->withQueryString(),
-            'filters' => array_merge($request->all([
-                'search', 
-                'category', 
-                'type',
-                'date_from', 
-                'date_to'
-            ]), [
-                'include_grants' => $request->boolean('include_grants')
-            ]),
-            'categories' => DocumentCategory::all(),
+        $documents = $query->latest()->paginate(20)->withQueryString();
+        $categories = DocumentCategory::all();
+
+        return Inertia::render('Modules/Document/Index', [
+            'documents' => $documents,
+            'categories' => $categories,
+            'filters' => $request->only(['search', 'category', 'date']),
+            'can' => [
+                'view_documents' => $request->user()->hasPermission('documents.view'),
+                'upload_documents' => $request->user()->hasPermission('documents.upload'),
+                'download_documents' => $request->user()->hasPermission('documents.download'),
+                'edit_documents' => $request->user()->hasPermission('documents.edit'),
+                'delete_documents' => $request->user()->hasPermission('documents.delete'),
+                'share_documents' => $request->user()->hasPermission('documents.share'),
+                'manage_categories' => $request->user()->hasPermission('documents.categories'),
+                'move_documents' => $request->user()->hasPermission('documents.move'),
+            ]
         ]);
     }
 

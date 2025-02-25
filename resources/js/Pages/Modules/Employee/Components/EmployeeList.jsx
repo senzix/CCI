@@ -4,7 +4,7 @@ import { FaEdit, FaTrash, FaEye } from 'react-icons/fa';
 import DeleteConfirmationModal from '@/Components/DeleteConfirmationModal';
 import Pagination from '@/Components/Pagination';
 
-export default function EmployeeList({ employees, onEdit }) {
+export default function EmployeeList({ employees, onEdit, can = {} }) {
     const [deleteModal, setDeleteModal] = useState({ isOpen: false, employee: null });
 
     const handleDelete = () => {
@@ -66,8 +66,8 @@ export default function EmployeeList({ employees, onEdit }) {
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
                                 <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                    ${employee.employment_status === 'full-time' ? 'bg-green-100 text-green-800' : 
-                                      employee.employment_status === 'part-time' ? 'bg-yellow-100 text-yellow-800' : 
+                                    ${employee.employment_status === 'full-time' ? 'bg-primary-100 text-primary-800' : 
+                                      employee.employment_status === 'part-time' ? 'bg-secondary-100 text-secondary-800' : 
                                       'bg-gray-100 text-gray-800'}`}>
                                     {employee.employment_status}
                                 </span>
@@ -76,19 +76,24 @@ export default function EmployeeList({ employees, onEdit }) {
                                 <div className="flex space-x-3">
                                     <button
                                         onClick={() => router.get(route('employees.show', employee.id))}
-                                        className="text-blue-600 hover:text-blue-900"
+                                        className="text-primary-600 hover:text-primary-900"
+                                        title="View Details"
                                     >
                                         <FaEye className="h-4 w-4" />
                                     </button>
+
                                     <button
                                         onClick={() => onEdit(employee)}
-                                        className="text-indigo-600 hover:text-indigo-900"
+                                        className="text-primary-600 hover:text-primary-900"
+                                        title="Edit Employee"
                                     >
                                         <FaEdit className="h-4 w-4" />
                                     </button>
+
                                     <button
                                         onClick={() => setDeleteModal({ isOpen: true, employee })}
-                                        className="text-red-600 hover:text-red-900"
+                                        className="text-secondary-600 hover:text-secondary-900"
+                                        title="Delete Employee"
                                     >
                                         <FaTrash className="h-4 w-4" />
                                     </button>

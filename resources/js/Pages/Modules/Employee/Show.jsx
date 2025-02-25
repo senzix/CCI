@@ -12,9 +12,9 @@ export default function Show({ employee }) {
                     </h2>
                     <Link
                         href={route('employees.index')}
-                        className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                        className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-primary-700 bg-white hover:bg-primary-50"
                     >
-                        <FaArrowLeft className="mr-2 h-4 w-4" />
+                        <FaArrowLeft className="mr-2 h-4 w-4 text-primary-500" />
                         Back to List
                     </Link>
                 </div>

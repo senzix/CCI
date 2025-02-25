@@ -47,7 +47,7 @@ export default function SearchFilters({ filters, departments }) {
                         </div>
                         <input
                             type="text"
-                            className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                            className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
                             placeholder="Search employees..."
                             value={values.search}
                             onChange={handleSearch}
@@ -57,7 +57,7 @@ export default function SearchFilters({ filters, departments }) {
 
                 <div className="flex space-x-4">
                     <select
-                        className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+                        className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm rounded-md"
                         value={values.department}
                         onChange={(e) => handleFilter('department', e.target.value)}
                     >
@@ -70,7 +70,7 @@ export default function SearchFilters({ filters, departments }) {
                     </select>
 
                     <select
-                        className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+                        className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm rounded-md"
                         value={values.status}
                         onChange={(e) => handleFilter('status', e.target.value)}
                     >

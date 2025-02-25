@@ -7,7 +7,7 @@ import DepartmentManager from './Components/DepartmentManager';
 import SearchFilters from './Components/SearchFilters';
 import { FaPlus, FaSitemap } from 'react-icons/fa';
 
-export default function Index({ employees, departments, positions, filters }) {
+export default function Index({ employees, departments, positions, filters, permissions }) {
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [editingEmployee, setEditingEmployee] = useState(null);
     const [isDepartmentManagerOpen, setIsDepartmentManagerOpen] = useState(false);
@@ -29,14 +29,14 @@ export default function Index({ employees, departments, positions, filters }) {
                             onClick={() => setIsDepartmentManagerOpen(true)}
                             className="inline-flex items-center px-2.5 py-1.5 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
                         >
-                            <FaSitemap className="mr-1.5 h-4 w-4" />
+                            <FaSitemap className="mr-1.5 h-4 w-4 text-primary-500" />
                             Manage Departments
                         </button>
                         <button
                             onClick={() => {
                                 setIsFormOpen(true);
                             }}
-                            className="inline-flex items-center px-2.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md text-sm"
+                            className="inline-flex items-center px-2.5 py-1.5 bg-primary-500 hover:bg-primary-600 text-white font-medium rounded-md text-sm"
                         >
                             <FaPlus className="mr-1.5 h-4 w-4" />
                             Add Employee
@@ -75,12 +75,14 @@ export default function Index({ employees, departments, positions, filters }) {
                 employee={editingEmployee}
                 departments={departments}
                 positions={positions}
+                permissions={permissions}
             />
 
             <DepartmentManager
                 show={isDepartmentManagerOpen}
                 onClose={() => setIsDepartmentManagerOpen(false)}
                 departments={departments}
+                positions={positions}
             />
         </AuthenticatedLayout>
     );

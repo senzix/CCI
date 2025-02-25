@@ -17,7 +17,7 @@ import CategoryManagementModal from './Components/CategoryManagementModal';
 import VersionUploadForm from './Components/VersionUploadForm';
 import ShareDocumentForm from './Components/ShareDocumentForm';
 
-export default function Index({ documents = { data: [] }, categories = [], filters = {} }) {
+export default function Index({ documents = { data: [] }, categories = [], filters = {}, can = {} }) {
     const [isUploadFormOpen, setIsUploadFormOpen] = useState(false);
     const [isVersionFormOpen, setIsVersionFormOpen] = useState(false);
     const [isShareFormOpen, setIsShareFormOpen] = useState(false);
@@ -80,7 +80,7 @@ export default function Index({ documents = { data: [] }, categories = [], filte
                             <button 
                                 onClick={() => setViewMode('grid')}
                                 className={`p-2 rounded-md ${viewMode === 'grid' 
-                                    ? 'bg-blue-50 text-blue-600' 
+                                    ? 'bg-primary-100 text-primary-600' 
                                     : 'text-gray-500 hover:bg-gray-50'}`}
                             >
                                 <FaThLarge className="h-4 w-4" />
@@ -88,7 +88,7 @@ export default function Index({ documents = { data: [] }, categories = [], filte
                             <button 
                                 onClick={() => setViewMode('table')}
                                 className={`p-2 rounded-md ${viewMode === 'table' 
-                                    ? 'bg-blue-50 text-blue-600' 
+                                    ? 'bg-primary-100 text-primary-600' 
                                     : 'text-gray-500 hover:bg-gray-50'}`}
                             >
                                 <FaTable className="h-4 w-4" />
@@ -101,20 +101,24 @@ export default function Index({ documents = { data: [] }, categories = [], filte
                             <FaTrash className="mr-2 h-4 w-4" />
                             Trash
                         </Link>
-                        <button
-                            onClick={() => setIsCategoryModalOpen(true)}
-                            className="inline-flex items-center px-3 py-2 text-sm font-medium bg-gray-600 hover:bg-gray-700 text-white rounded"
-                        >
-                            <FaPlus className="mr-2 h-4 w-4" />
-                            Manage Categories
-                        </button>
-                        <button
-                            onClick={() => setIsUploadFormOpen(true)}
-                            className="inline-flex items-center px-3 py-2 text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white rounded"
-                        >
-                            <FaUpload className="mr-2 h-4 w-4" />
-                            Upload Document
-                        </button>
+                        {can.manage_categories && (
+                            <button
+                                onClick={() => setIsCategoryModalOpen(true)}
+                                className="inline-flex items-center px-3 py-2 text-sm font-medium bg-secondary-500 hover:bg-secondary-600 text-white rounded"
+                            >
+                                <FaPlus className="mr-2 h-4 w-4" />
+                                Manage Categories
+                            </button>
+                        )}
+                        {can.upload_documents && (
+                            <button
+                                onClick={() => setIsUploadFormOpen(true)}
+                                className="inline-flex items-center px-3 py-2 text-sm font-medium bg-primary-500 hover:bg-primary-600 text-white rounded"
+                            >
+                                <FaUpload className="mr-2 h-4 w-4" />
+                                Upload Document
+                            </button>
+                        )}
                     </div>
                 </div>
             }
@@ -133,6 +137,7 @@ export default function Index({ documents = { data: [] }, categories = [], filte
                             selectedDocuments={selectedDocuments}
                             onClearSelection={handleClearSelection}
                             categories={categories}
+                            can={can}
                         />
 
                         <div className="flex items-center space-x-2 p-4">
@@ -140,7 +145,7 @@ export default function Index({ documents = { data: [] }, categories = [], filte
                                 checked={includeGrantDocs}
                                 onChange={handleToggleGrantDocs}
                                 className={`${
-                                    includeGrantDocs ? 'bg-blue-600' : 'bg-gray-200'
+                                    includeGrantDocs ? 'bg-primary-600' : 'bg-gray-200'
                                 } relative inline-flex h-5 w-9 items-center rounded-full`}
                             >
                                 <span className="sr-only">Include Grant Documents</span>
@@ -160,6 +165,7 @@ export default function Index({ documents = { data: [] }, categories = [], filte
                             onSelectionChange={setSelectedDocuments}
                             onVersionClick={handleVersionClick}
                             onShareClick={handleShareClick}
+                            can={can}
                         />
                     </div>
                 </div>

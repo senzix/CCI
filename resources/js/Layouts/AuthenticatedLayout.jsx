@@ -18,8 +18,13 @@ export default function AuthenticatedLayout({ header, children }) {
                     <div className="flex h-16 justify-between">
                         <div className="flex">
                             <div className="flex shrink-0 items-center">
-                                <Link href="/" className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                                    CCI
+                                <Link href="/">
+                                    <img
+                                        src="/storage/images/logo.png"
+                                        alt="Company Logo"
+                                        className="w-40 h-auto"
+                                        style={{ width: '120px' }}
+                                    />
                                 </Link>
                             </div>
 
@@ -208,7 +213,7 @@ export default function AuthenticatedLayout({ header, children }) {
             </nav>
 
             {header && (
-                <header className="bg-white shadow pt-16">
+                <header className="bg-primary-50 shadow pt-16">
                     <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
                         {header}
                     </div>

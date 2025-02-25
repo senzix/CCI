@@ -4,9 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Carbon\Carbon;
 
 class AttendanceRecord extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'employee_id',
         'date',
@@ -34,5 +38,22 @@ class AttendanceRecord extends Model
         }
 
         return $this->clock_in->diffInHours($this->clock_out);
+    }
+
+    public static function getMonthlyRate()
+    {
+        $startOfMonth = Carbon::now()->startOfMonth();
+        $endOfMonth = Carbon::now()->endOfMonth();
+        
+        $totalWorkDays = self::whereBetween('date', [$startOfMonth, $endOfMonth])->count();
+        $presentDays = self::whereBetween('date', [$startOfMonth, $endOfMonth])
+            ->whereIn('status', ['present', 'late'])
+            ->count();
+
+        if ($totalWorkDays === 0) {
+            return 0;
+        }
+
+        return round(($presentDays / $totalWorkDays) * 100, 2);
     }
 } 
