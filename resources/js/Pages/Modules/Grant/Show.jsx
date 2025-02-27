@@ -67,7 +67,7 @@ export default function Show({ grant, documentCategories, flash }) {
                                     className={`
                                         whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm
                                         ${activeTab === tab.id
-                                            ? 'border-blue-500 text-blue-600'
+                                            ? 'border-primary-500 text-primary-600'
                                             : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                                         }
                                     `}
@@ -94,7 +94,7 @@ export default function Show({ grant, documentCategories, flash }) {
                             <div className="flex justify-end">
                                 <button
                                     onClick={() => setIsExpenditureFormOpen(true)}
-                                    className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md"
+                                    className="inline-flex items-center px-4 py-2 bg-primary-500 hover:bg-primary-600 text-gray-900 font-medium rounded-md"
                                 >
                                     Add Expenditure
                                 </button>

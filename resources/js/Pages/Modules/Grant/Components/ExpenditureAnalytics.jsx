@@ -20,8 +20,14 @@ export default function ExpenditureAnalytics({ expenditures = [], grant }) {
                 datasets: [{
                     data: Object.values(categoryData),
                     backgroundColor: [
-                        '#3B82F6', '#10B981', '#F59E0B', '#EF4444',
-                        '#6366F1', '#8B5CF6', '#EC4899', '#14B8A6'
+                        '#e6b300', // primary-500
+                        '#b38900', // primary-600
+                        '#806200', // primary-700
+                        '#e60000', // secondary-500
+                        '#b30000', // secondary-600
+                        '#800000', // secondary-700
+                        '#4d3b00', // primary-800
+                        '#4d0000'  // secondary-800
                     ]
                 }]
             },
@@ -110,9 +116,9 @@ export default function ExpenditureAnalytics({ expenditures = [], grant }) {
                         <span>Budget Utilization</span>
                         <span>{spendingPercentage.toFixed(1)}%</span>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2.5">
+                    <div className="w-full bg-primary-500 h-2.5 rounded-full">
                         <div 
-                            className="bg-blue-600 h-2.5 rounded-full"
+                            className="bg-primary-600 h-2.5 rounded-full"
                             style={{ width: `${spendingPercentage}%` }}
                         ></div>
                     </div>

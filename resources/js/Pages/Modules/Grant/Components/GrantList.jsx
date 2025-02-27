@@ -56,14 +56,19 @@ export default function GrantList({ grants = { data: [] }, onEdit }) {
                                 </div>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap">
-                                <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-${grant.status_color}-100 text-${grant.status_color}-800`}>
+                                <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                                    grant.status === 'active' ? 'bg-primary-100 text-primary-800' :
+                                    grant.status === 'completed' ? 'bg-green-100 text-green-800' :
+                                    grant.status === 'rejected' ? 'bg-secondary-100 text-secondary-800' :
+                                    'bg-gray-100 text-gray-800'
+                                }`}>
                                     {grant.status}
                                 </span>
                             </td>
                             <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                 <Link
                                     href={route('grants.show', grant.id)}
-                                    className="text-sm text-blue-600 hover:text-blue-900 mr-3"
+                                    className="text-sm text-primary-600 hover:text-primary-700 mr-3"
                                 >
                                     View
                                 </Link>

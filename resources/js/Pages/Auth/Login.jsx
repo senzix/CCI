@@ -25,6 +25,15 @@ export default function Login({ status, canResetPassword }) {
         <GuestLayout>
             <Head title="Log in" />
 
+            {/* Add test credentials info box */}
+            <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-md">
+                <h3 className="font-bold text-blue-800 mb-2">Test Admin Credentials:</h3>
+                <div className="text-sm text-blue-700">
+                    <p>Email: <span className="font-mono">admin@example.com</span></p>
+                    <p>Password: <span className="font-mono">admin123</span></p>
+                </div>
+            </div>
+
             {status && (
                 <div className="mb-4 text-sm font-medium text-green-600">
                     {status}

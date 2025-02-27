@@ -76,7 +76,7 @@ export default function CategoryManager({ categories = [], isOpen, onClose }) {
                             <button
                                 type="submit"
                                 disabled={processing}
-                                className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-md"
+                                className="inline-flex items-center px-4 py-2 bg-primary-500 hover:bg-primary-600 text-gray-900 font-medium rounded-md"
                             >
                                 {editingCategory ? 'Update' : 'Add'} Category
                             </button>
@@ -107,7 +107,7 @@ export default function CategoryManager({ categories = [], isOpen, onClose }) {
                                     </button>
                                     <button
                                         onClick={() => handleDelete(category.id)}
-                                        className="p-1.5 text-gray-600 hover:text-red-600 rounded-md"
+                                        className="p-1.5 text-gray-600 hover:text-secondary-500 rounded-md"
                                     >
                                         <FaTrash className="w-4 h-4" />
                                     </button>

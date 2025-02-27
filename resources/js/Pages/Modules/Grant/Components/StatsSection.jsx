@@ -10,26 +10,26 @@ export default function StatsSection({ stats = {
         {
             name: 'Total Grants',
             value: stats.total_grants,
-            textColor: 'text-blue-600',
-            bgColor: 'bg-blue-50',
+            textColor: 'text-primary-700',
+            bgColor: 'bg-primary-50',
         },
         {
             name: 'Active Grants',
             value: stats.active_grants,
-            textColor: 'text-green-600',
-            bgColor: 'bg-green-50',
+            textColor: 'text-primary-600',
+            bgColor: 'bg-primary-50',
         },
         {
             name: 'Total Amount',
             value: formatCurrency(stats.total_amount),
-            textColor: 'text-purple-600',
-            bgColor: 'bg-purple-50',
+            textColor: 'text-secondary-600',
+            bgColor: 'bg-secondary-50',
         },
         {
             name: 'Received Amount',
             value: formatCurrency(stats.received_amount),
-            textColor: 'text-indigo-600',
-            bgColor: 'bg-indigo-50',
+            textColor: 'text-secondary-700',
+            bgColor: 'bg-secondary-50',
         },
     ];
 

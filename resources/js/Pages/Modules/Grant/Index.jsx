@@ -34,7 +34,7 @@ export default function Index({ grants, categories, filters, stats }) {
                         </button>
                         <button
                             onClick={() => setIsFormOpen(true)}
-                            className="inline-flex items-center px-2.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-sm text-white font-medium rounded-md"
+                            className="inline-flex items-center px-2.5 py-1.5 bg-primary-500 hover:bg-primary-600 text-gray-900 font-medium rounded-md"
                         >
                             <FaPlus className="w-3.5 h-3.5 mr-1.5" />
                             New Grant
