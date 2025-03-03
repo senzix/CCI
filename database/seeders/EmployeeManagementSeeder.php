@@ -8,13 +8,8 @@ use App\Models\User;
 use App\Models\Department;
 use App\Models\Position;
 use App\Models\Employee;
-use App\Models\LeaveType;
-use App\Models\SalaryComponent;
-use App\Models\PayrollPeriod;
-use App\Models\AttendanceRecord;
-use App\Models\LeaveRequest;
-use App\Models\PayrollRecord;
-use App\Models\Role;
+// Remove or comment out the Role import
+// use App\Models\Role;
 
 class EmployeeManagementSeeder extends Seeder
 {
@@ -123,148 +118,28 @@ class EmployeeManagementSeeder extends Seeder
         ];
 
         foreach ($employees as $employeeData) {
-            // Create user first
+            // Create or update user
             $user = User::firstOrCreate(
                 ['email' => $employeeData['user']['email']],
                 $employeeData['user']
             );
 
-            // Then create employee with user_id
+            // Comment out or remove the role assignment code
+            /*
+            if (!$user->is_admin) {
+                $staffRole = Role::where('name', 'Staff')->first();
+                if ($staffRole) {
+                    $user->roles()->syncWithoutDetaching([$staffRole->id]);
+                }
+            }
+            */
+
+            // Create or update employee
             $employeeData['employee']['user_id'] = $user->id;
             Employee::firstOrCreate(
                 ['email' => $employeeData['employee']['email']],
                 $employeeData['employee']
             );
-        }
-
-        // Create Leave Types
-        $leaveTypes = [
-            ['name' => 'Annual Leave', 'annual_allowance' => 14, 'paid' => true],
-            ['name' => 'Sick Leave', 'annual_allowance' => 10, 'paid' => true],
-            ['name' => 'Maternity Leave', 'annual_allowance' => 90, 'paid' => true],
-            ['name' => 'Unpaid Leave', 'annual_allowance' => 30, 'paid' => false]
-        ];
-
-        foreach ($leaveTypes as $type) {
-            LeaveType::firstOrCreate(
-                ['name' => $type['name']],
-                $type
-            );
-        }
-
-        // Create Sample Attendance Records only for created employees
-        $createdEmployees = Employee::all();
-        foreach ($createdEmployees as $index => $employee) {
-            AttendanceRecord::create([
-                'employee_id' => $employee->id,
-                'date' => '2024-03-20',
-                'clock_in' => $index === 0 ? '08:00:00' : '08:15:00',
-                'clock_out' => '17:00:00',
-                'status' => $index === 0 ? 'present' : 'late',
-                'notes' => $index === 0 ? null : 'Traffic delay'
-            ]);
-        }
-
-        // Create Sample Leave Requests only for created employees
-        if (count($createdEmployees) > 0) {
-            LeaveRequest::create([
-                'employee_id' => $createdEmployees[0]->id,
-                'leave_type_id' => LeaveType::where('name', 'Annual Leave')->first()->id,
-                'start_date' => '2024-04-01',
-                'end_date' => '2024-04-05',
-                'status' => 'approved',
-                'reason' => 'Annual vacation'
-            ]);
-
-            if (count($createdEmployees) > 1) {
-                LeaveRequest::create([
-                    'employee_id' => $createdEmployees[1]->id,
-                    'leave_type_id' => LeaveType::where('name', 'Sick Leave')->first()->id,
-                    'start_date' => '2024-03-25',
-                    'end_date' => '2024-03-26',
-                    'status' => 'pending',
-                    'reason' => 'Medical appointment'
-                ]);
-            }
-        }
-
-        // Create Salary Components
-        $salaryComponents = [
-            [
-                'name' => 'Housing Allowance',
-                'type' => 'allowance',
-                'is_taxable' => false,
-                'is_fixed' => true,
-                'amount' => 500.00
-            ],
-            [
-                'name' => 'Transportation Allowance',
-                'type' => 'allowance',
-                'is_taxable' => false,
-                'is_fixed' => true,
-                'amount' => 300.00
-            ],
-            [
-                'name' => 'Income Tax',
-                'type' => 'deduction',
-                'is_taxable' => false,
-                'is_fixed' => false,
-                'percentage' => 10.00
-            ]
-        ];
-
-        foreach ($salaryComponents as $component) {
-            SalaryComponent::firstOrCreate(
-                ['name' => $component['name']],
-                $component
-            );
-        }
-
-        // Create Payroll Periods
-        $payrollPeriods = [
-            [
-                'name' => 'March 2024',
-                'start_date' => '2024-03-01',
-                'end_date' => '2024-03-31',
-                'payment_date' => '2024-04-05',
-                'status' => 'active'
-            ],
-            [
-                'name' => 'April 2024',
-                'start_date' => '2024-04-01',
-                'end_date' => '2024-04-30',
-                'payment_date' => '2024-05-05',
-                'status' => 'pending'
-            ]
-        ];
-
-        foreach ($payrollPeriods as $period) {
-            PayrollPeriod::firstOrCreate(
-                ['name' => $period['name']],
-                $period
-            );
-        }
-
-        // Create Sample Payroll Records only for created employees
-        if (count($createdEmployees) > 0) {
-            foreach ($createdEmployees as $employee) {
-                PayrollRecord::create([
-                    'employee_id' => $employee->id,
-                    'payroll_period_id' => PayrollPeriod::where('name', 'March 2024')->first()->id,
-                    'basic_salary' => $employee->salary / 12,
-                    'gross_salary' => ($employee->salary / 12) + 800,
-                    'total_deductions' => ($employee->salary / 12) * 0.1,
-                    'net_salary' => ($employee->salary / 12) + 800 - (($employee->salary / 12) * 0.1),
-                    'allowances' => json_encode([
-                        ['name' => 'Housing Allowance', 'amount' => 500.00],
-                        ['name' => 'Transportation Allowance', 'amount' => 300.00]
-                    ]),
-                    'deductions' => json_encode([
-                        ['name' => 'Income Tax', 'amount' => ($employee->salary / 12) * 0.1]
-                    ]),
-                    'payment_status' => 'pending'
-                ]);
-            }
         }
     }
 } 

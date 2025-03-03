@@ -66,8 +66,8 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
                             {/* Feature cards with updated colors */}
                             <FeatureCard
                                 icon="users"
-                                title="Student Management"
-                                description="Comprehensive student tracking, assessment management, and progress monitoring"
+                                title="Beneficiary Management"
+                                description="Comprehensive beneficiary tracking, assessment management, and progress monitoring"
                             />
                             <FeatureCard
                                 icon="document"

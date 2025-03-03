@@ -40,6 +40,21 @@ class EmployeeController extends Controller
             'positions' => Position::with('department')->get(),
             'filters' => $request->only(['search', 'department', 'status']),
             'permissions' => Permission::all(),
+            'can' => [
+                'view_employees' => $request->user()->hasPermission('employees.view'),
+                'create_employees' => $request->user()->hasPermission('employees.create'),
+                'edit_employees' => $request->user()->hasPermission('employees.edit'),
+                'delete_employees' => $request->user()->hasPermission('employees.delete'),
+                'manage_departments' => $request->user()->hasPermission('departments.manage'),
+                'view_departments' => $request->user()->hasPermission('departments.view'),
+                'create_departments' => $request->user()->hasPermission('departments.create'),
+                'edit_departments' => $request->user()->hasPermission('departments.edit'),
+                'delete_departments' => $request->user()->hasPermission('departments.delete'),
+                'view_positions' => $request->user()->hasPermission('positions.view'),
+                'create_positions' => $request->user()->hasPermission('positions.create'),
+                'edit_positions' => $request->user()->hasPermission('positions.edit'),
+                'delete_positions' => $request->user()->hasPermission('positions.delete'),
+            ]
         ]);
     }
 
@@ -88,10 +103,16 @@ class EmployeeController extends Controller
         return redirect()->back()->with('success', 'Employee created successfully.');
     }
 
-    public function show(Employee $employee)
+    public function show(Request $request, Employee $employee)
     {
+        $employee->load(['position', 'position.department', 'user', 'user.permissions']);
+        
         return Inertia::render('Modules/Employee/Show', [
-            'employee' => $employee->load(['position', 'position.department', 'user'])
+            'employee' => $employee,
+            'can' => [
+                'edit_employees' => $request->user()->hasPermission('employees.edit'),
+                'delete_employees' => $request->user()->hasPermission('employees.delete'),
+            ]
         ]);
     }
 

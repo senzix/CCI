@@ -36,24 +36,6 @@ export default function AuthenticatedLayout({ header, children }) {
                                     Dashboard
                                 </NavLink>
                                 <NavLink
-                                    href={route('students.index')}
-                                    active={route().current('students.*')}
-                                >
-                                    Students
-                                </NavLink>
-                                <NavLink
-                                    href={route('classes.index')}
-                                    active={route().current('classes.*')}
-                                >
-                                    Classes
-                                </NavLink>
-                                <NavLink
-                                    href={route('attendance.index')}
-                                    active={route().current('attendance.*')}
-                                >
-                                    Attendance
-                                </NavLink>
-                                <NavLink
                                     href={route('grants.index')}
                                     active={route().current('grants.*')}
                                 >
@@ -159,24 +141,6 @@ export default function AuthenticatedLayout({ header, children }) {
                             active={route().current('dashboard')}
                         >
                             Dashboard
-                        </ResponsiveNavLink>
-                        <ResponsiveNavLink
-                            href={route('students.index')}
-                            active={route().current('students.*')}
-                        >
-                            Students
-                        </ResponsiveNavLink>
-                        <ResponsiveNavLink
-                            href={route('classes.index')}
-                            active={route().current('classes.*')}
-                        >
-                            Classes
-                        </ResponsiveNavLink>
-                        <ResponsiveNavLink
-                            href={route('attendance.index')}
-                            active={route().current('attendance.*')}
-                        >
-                            Attendance
                         </ResponsiveNavLink>
                         <ResponsiveNavLink
                             href={route('grants.index')}

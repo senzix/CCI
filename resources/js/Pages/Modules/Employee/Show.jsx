@@ -1,8 +1,8 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link } from '@inertiajs/react';
-import { FaArrowLeft } from 'react-icons/fa';
+import { FaArrowLeft, FaEdit } from 'react-icons/fa';
 
-export default function Show({ employee }) {
+export default function Show({ employee, can }) {
     return (
         <AuthenticatedLayout
             header={
@@ -10,13 +10,25 @@ export default function Show({ employee }) {
                     <h2 className="font-semibold text-xl text-gray-800 leading-tight">
                         Employee Details
                     </h2>
-                    <Link
-                        href={route('employees.index')}
-                        className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-primary-700 bg-white hover:bg-primary-50"
-                    >
-                        <FaArrowLeft className="mr-2 h-4 w-4 text-primary-500" />
-                        Back to List
-                    </Link>
+                    <div className="flex space-x-3">
+                        <Link
+                            href={route('employees.index')}
+                            className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-primary-700 bg-white hover:bg-primary-50"
+                        >
+                            <FaArrowLeft className="mr-2 h-4 w-4 text-primary-500" />
+                            Back to List
+                        </Link>
+                        
+                        {can.edit_employees && (
+                            <Link
+                                href={route('employees.edit', employee.id)}
+                                className="inline-flex items-center px-3 py-2 border border-primary-300 text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700"
+                            >
+                                <FaEdit className="mr-2 h-4 w-4" />
+                                Edit Employee
+                            </Link>
+                        )}
+                    </div>
                 </div>
             }
         >

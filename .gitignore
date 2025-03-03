@@ -2,7 +2,7 @@
 /node_modules
 /public
 /vendor
-storage
+/storage
 /bootstrap/cache
 .env
 .env.backup

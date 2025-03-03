@@ -7,7 +7,7 @@ import DepartmentManager from './Components/DepartmentManager';
 import SearchFilters from './Components/SearchFilters';
 import { FaPlus, FaSitemap } from 'react-icons/fa';
 
-export default function Index({ employees, departments, positions, filters, permissions }) {
+export default function Index({ employees, departments, positions, filters, permissions, can }) {
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [editingEmployee, setEditingEmployee] = useState(null);
     const [isDepartmentManagerOpen, setIsDepartmentManagerOpen] = useState(false);
@@ -25,22 +25,26 @@ export default function Index({ employees, departments, positions, filters, perm
                         </p>
                     </div>
                     <div className="flex space-x-2">
-                        <button
-                            onClick={() => setIsDepartmentManagerOpen(true)}
-                            className="inline-flex items-center px-2.5 py-1.5 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
-                        >
-                            <FaSitemap className="mr-1.5 h-4 w-4 text-primary-500" />
-                            Manage Departments
-                        </button>
-                        <button
-                            onClick={() => {
-                                setIsFormOpen(true);
-                            }}
-                            className="inline-flex items-center px-2.5 py-1.5 bg-primary-500 hover:bg-primary-600 text-white font-medium rounded-md text-sm"
-                        >
-                            <FaPlus className="mr-1.5 h-4 w-4" />
-                            Add Employee
-                        </button>
+                        {can.manage_departments && (
+                            <button
+                                onClick={() => setIsDepartmentManagerOpen(true)}
+                                className="inline-flex items-center px-2.5 py-1.5 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                            >
+                                <FaSitemap className="mr-1.5 h-4 w-4 text-primary-500" />
+                                Manage Departments
+                            </button>
+                        )}
+                        {can.create_employees && (
+                            <button
+                                onClick={() => {
+                                    setIsFormOpen(true);
+                                }}
+                                className="inline-flex items-center px-2.5 py-1.5 bg-primary-500 hover:bg-primary-600 text-white font-medium rounded-md text-sm"
+                            >
+                                <FaPlus className="mr-1.5 h-4 w-4" />
+                                Add Employee
+                            </button>
+                        )}
                     </div>
                 </div>
             }
@@ -61,6 +65,7 @@ export default function Index({ employees, departments, positions, filters, perm
                                 setEditingEmployee(employee);
                                 setIsFormOpen(true);
                             }}
+                            can={can}
                         />
                     </div>
                 </div>
@@ -83,6 +88,7 @@ export default function Index({ employees, departments, positions, filters, perm
                 onClose={() => setIsDepartmentManagerOpen(false)}
                 departments={departments}
                 positions={positions}
+                can={can}
             />
         </AuthenticatedLayout>
     );

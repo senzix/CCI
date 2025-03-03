@@ -82,21 +82,25 @@ export default function EmployeeList({ employees, onEdit, can = {} }) {
                                         <FaEye className="h-4 w-4" />
                                     </button>
 
-                                    <button
-                                        onClick={() => onEdit(employee)}
-                                        className="text-primary-600 hover:text-primary-900"
-                                        title="Edit Employee"
-                                    >
-                                        <FaEdit className="h-4 w-4" />
-                                    </button>
+                                    {can.edit_employees && (
+                                        <button
+                                            onClick={() => onEdit(employee)}
+                                            className="text-primary-600 hover:text-primary-900"
+                                            title="Edit Employee"
+                                        >
+                                            <FaEdit className="h-4 w-4" />
+                                        </button>
+                                    )}
 
-                                    <button
-                                        onClick={() => setDeleteModal({ isOpen: true, employee })}
-                                        className="text-secondary-600 hover:text-secondary-900"
-                                        title="Delete Employee"
-                                    >
-                                        <FaTrash className="h-4 w-4" />
-                                    </button>
+                                    {can.delete_employees && (
+                                        <button
+                                            onClick={() => setDeleteModal({ isOpen: true, employee })}
+                                            className="text-secondary-600 hover:text-secondary-900"
+                                            title="Delete Employee"
+                                        >
+                                            <FaTrash className="h-4 w-4" />
+                                        </button>
+                                    )}
                                 </div>
                             </td>
                         </tr>

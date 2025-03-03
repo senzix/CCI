@@ -9,7 +9,7 @@ import SecondaryButton from '@/Components/SecondaryButton';
 import DeleteConfirmationModal from '@/Components/DeleteConfirmationModal';
 import { FaEdit, FaTrash, FaPlus } from 'react-icons/fa';
 
-export default function DepartmentManager({ show, onClose, departments = [], positions = [] }) {
+export default function DepartmentManager({ show, onClose, departments = [], positions = [], can = {} }) {
     const [editingDepartment, setEditingDepartment] = useState(null);
     const [showPositionForm, setShowPositionForm] = useState(false);
     const [selectedDepartment, setSelectedDepartment] = useState(null);
@@ -219,27 +219,33 @@ export default function DepartmentManager({ show, onClose, departments = [], pos
                                                 <p className="text-sm text-gray-500">{department.code}</p>
                                             </div>
                                             <div className="flex space-x-2">
-                                                <button
-                                                    onClick={() => handleAddPosition(department)}
-                                                    className="text-primary-600 hover:text-primary-800"
-                                                    title="Add Position"
-                                                >
-                                                    <FaPlus className="h-4 w-4" />
-                                                </button>
-                                                <button
-                                                    onClick={() => handleEdit(department)}
-                                                    className="text-primary-600 hover:text-primary-800"
-                                                    title="Edit Department"
-                                                >
-                                                    <FaEdit className="h-4 w-4" />
-                                                </button>
-                                                <button
-                                                    onClick={() => handleDeleteDepartment(department)}
-                                                    className="text-secondary-600 hover:text-secondary-800"
-                                                    title="Delete Department"
-                                                >
-                                                    <FaTrash className="h-4 w-4" />
-                                                </button>
+                                                {can.create_positions && (
+                                                    <button
+                                                        onClick={() => handleAddPosition(department)}
+                                                        className="text-primary-600 hover:text-primary-800"
+                                                        title="Add Position"
+                                                    >
+                                                        <FaPlus className="h-4 w-4" />
+                                                    </button>
+                                                )}
+                                                {can.edit_departments && (
+                                                    <button
+                                                        onClick={() => handleEdit(department)}
+                                                        className="text-primary-600 hover:text-primary-800"
+                                                        title="Edit Department"
+                                                    >
+                                                        <FaEdit className="h-4 w-4" />
+                                                    </button>
+                                                )}
+                                                {can.delete_departments && (
+                                                    <button
+                                                        onClick={() => handleDeleteDepartment(department)}
+                                                        className="text-secondary-600 hover:text-secondary-800"
+                                                        title="Delete Department"
+                                                    >
+                                                        <FaTrash className="h-4 w-4" />
+                                                    </button>
+                                                )}
                                             </div>
                                         </div>
                                         
@@ -255,13 +261,15 @@ export default function DepartmentManager({ show, onClose, departments = [], pos
                                                                 {position.code} - Base Salary: ${position.base_salary}
                                                             </p>
                                                         </div>
-                                                        <button
-                                                            onClick={() => handleDeletePosition(position)}
-                                                            className="text-secondary-600 hover:text-secondary-800"
-                                                            title="Delete Position"
-                                                        >
-                                                            <FaTrash className="h-3 w-3" />
-                                                        </button>
+                                                        {can.delete_positions && (
+                                                            <button
+                                                                onClick={() => handleDeletePosition(position)}
+                                                                className="text-secondary-600 hover:text-secondary-800"
+                                                                title="Delete Position"
+                                                            >
+                                                                <FaTrash className="h-3 w-3" />
+                                                            </button>
+                                                        )}
                                                     </div>
                                                 ))}
                                         </div>

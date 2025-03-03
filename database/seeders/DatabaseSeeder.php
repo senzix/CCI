@@ -12,8 +12,6 @@ class DatabaseSeeder extends Seeder
             PermissionSeeder::class,
             SuperAdminSeeder::class,
             DocumentCategorySeeder::class,
-            ClassCategorySeeder::class,
-            StudentSeeder::class,
             GrantSeeder::class,
             EmployeeManagementSeeder::class,
         ]);

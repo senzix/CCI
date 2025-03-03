@@ -1,33 +1,54 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link } from '@inertiajs/react';
-import { FaProjectDiagram, FaFileAlt, FaUserTie, FaUserGraduate, FaHandHoldingUsd } from 'react-icons/fa';
+import { FaProjectDiagram, FaFileAlt, FaUserTie, FaHandHoldingUsd, FaLock } from 'react-icons/fa';
+import { useState } from 'react';
+import PermissionDeniedModal from '@/Components/PermissionDeniedModal';
 
-const ModuleCard = ({ title, icon: Icon, description, count, route }) => (
-    <Link href={route}>
-        <div className="transform transition-all hover:scale-102 hover:shadow-xl cursor-pointer duration-300 h-full">
-            <div className="p-6 rounded-xl shadow-md bg-white border-t-4 border-primary-500 h-full flex flex-col">
-                <div className="flex flex-col flex-1">
-                    <div className="p-2.5 rounded-xl bg-primary-100 w-fit mb-3">
-                        <Icon className="w-5 h-5 text-secondary-600" />
-                    </div>
-                    <div className="flex-1">
-                        <h3 className="text-base font-bold text-gray-900">{title}</h3>
-                        <p className="mt-0.5 text-sm text-gray-600">{description}</p>
-                    </div>
-                    {count && (
-                        <div className="flex items-center justify-between pt-3 mt-3 border-t border-gray-100">
-                            <span className="text-sm font-medium text-gray-600">Total</span>
-                            <span className="text-base font-bold text-secondary-600">{count}</span>
+const ModuleCard = ({ title, icon: Icon, description, count, route, hasPermission }) => {
+    const [showPermissionDenied, setShowPermissionDenied] = useState(false);
+    
+    const handleClick = (e) => {
+        if (!hasPermission) {
+            e.preventDefault();
+            setShowPermissionDenied(true);
+        }
+    };
+    
+    return (
+        <>
+            <Link href={route} onClick={handleClick}>
+                <div className={`transform transition-all hover:scale-102 hover:shadow-xl cursor-pointer duration-300 h-full ${!hasPermission ? 'opacity-70' : ''}`}>
+                    <div className="p-6 rounded-xl shadow-md bg-white border-t-4 border-primary-500 h-full flex flex-col">
+                        <div className="flex flex-col flex-1">
+                            <div className="p-2.5 rounded-xl bg-primary-100 w-fit mb-3 flex justify-between items-center">
+                                <Icon className="w-5 h-5 text-secondary-600" />
+                                {!hasPermission && <FaLock className="w-3 h-3 text-red-500 ml-2" />}
+                            </div>
+                            <div className="flex-1">
+                                <h3 className="text-base font-bold text-gray-900">{title}</h3>
+                                <p className="mt-0.5 text-sm text-gray-600">{description}</p>
+                            </div>
+                            {count && (
+                                <div className="flex items-center justify-between pt-3 mt-3 border-t border-gray-100">
+                                    <span className="text-sm font-medium text-gray-600">Total</span>
+                                    <span className="text-base font-bold text-secondary-600">{count}</span>
+                                </div>
+                            )}
                         </div>
-                    )}
+                    </div>
                 </div>
-            </div>
-        </div>
-    </Link>
-);
+            </Link>
+            
+            <PermissionDeniedModal 
+                show={showPermissionDenied} 
+                onClose={() => setShowPermissionDenied(false)} 
+            />
+        </>
+    );
+};
 
 export default function Dashboard({ auth, stats }) {
-    const canAccess = (permission) => {
+    const hasPermission = (permission) => {
         if (!permission) return true; // If no permission required, show the module
         if (auth.user.is_admin) return true; // Admin can access everything
         return auth.user.permissions.includes(permission);
@@ -35,20 +56,11 @@ export default function Dashboard({ auth, stats }) {
 
     const modules = [
         {
-            title: 'Students',
-            description: 'Manage student records',
-            icon: FaUserGraduate,
-            color: 'border-blue-500',
-            count: `${stats?.active_students ?? 0} Active Students`,
-            route: route('students.index'),
-            permission: 'students.view'
-        },
-        {
             title: 'Documents',
             description: 'Manage documents and files',
             icon: FaFileAlt,
             color: 'border-yellow-500',
-            count: `${stats?.total_documents ?? 0} Documents`,
+            count: `${stats?.total_files ?? 0} Documents`,
             route: route('documents.index'),
             permission: 'documents.view'
         },
@@ -81,8 +93,6 @@ export default function Dashboard({ auth, stats }) {
         }
     ];
 
-    const accessibleModules = modules.filter(module => canAccess(module.permission));
-
     return (
         <AuthenticatedLayout
             header={
@@ -112,8 +122,12 @@ export default function Dashboard({ auth, stats }) {
             <div className="py-8">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-6">
-                        {accessibleModules.map((module, index) => (
-                            <ModuleCard key={index} {...module} />
+                        {modules.map((module, index) => (
+                            <ModuleCard 
+                                key={index} 
+                                {...module} 
+                                hasPermission={hasPermission(module.permission)}
+                            />
                         ))}
                     </div>
                 </div>
